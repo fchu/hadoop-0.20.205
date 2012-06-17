@@ -6,10 +6,10 @@
 # remote nodes.
 
 # The java implementation to use.  Required.
-# export JAVA_HOME=/usr/lib/j2sdk1.5-sun
+export JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Home
 
 # Extra Java CLASSPATH elements.  Optional.
-# export HADOOP_CLASSPATH=
+export HADOOP_CLASSPATH=${HADOOP_PREFIX}/lib/hadoop-snappy-0.0.1-SNAPSHOT.jar
 
 # The maximum amount of heap to use, in MB. Default is 1000.
 # export HADOOP_HEAPSIZE=2000

@@ -24,23 +24,23 @@
 #
 #   HADOOP_CLASSPATH Extra Java CLASSPATH entries.
 #
-#   HADOOP_USER_CLASSPATH_FIRST      When defined, the HADOOP_CLASSPATH is 
+#   HADOOP_USER_CLASSPATH_FIRST      When defined, the HADOOP_CLASSPATH is
 #                                    added in the beginning of the global
 #                                    classpath. Can be defined, for example,
-#                                    by doing 
+#                                    by doing
 #                                    export HADOOP_USER_CLASSPATH_FIRST=true
 #
-#   HADOOP_HEAPSIZE  The maximum amount of heap to use, in MB. 
+#   HADOOP_HEAPSIZE  The maximum amount of heap to use, in MB.
 #                    Default is 1000.
 #
 #   HADOOP_OPTS      Extra Java runtime options.
-#   
-#   HADOOP_NAMENODE_OPTS       These options are added to HADOOP_OPTS 
+#
+#   HADOOP_NAMENODE_OPTS       These options are added to HADOOP_OPTS
 #   HADOOP_CLIENT_OPTS         when the respective command is run.
-#   HADOOP_{COMMAND}_OPTS etc  HADOOP_JT_OPTS applies to JobTracker 
-#                              for e.g.  HADOOP_CLIENT_OPTS applies to 
-#                              more than one command (fs, dfs, fsck, 
-#                              dfsadmin etc)  
+#   HADOOP_{COMMAND}_OPTS etc  HADOOP_JT_OPTS applies to JobTracker
+#                              for e.g.  HADOOP_CLIENT_OPTS applies to
+#                              more than one command (fs, dfs, fsck,
+#                              dfsadmin etc)
 #
 #   HADOOP_CONF_DIR  Alternate conf dir. Default is ${HADOOP_HOME}/conf.
 #
@@ -80,12 +80,12 @@ if [ $# = 0 ]; then
   echo "  fs                   run a generic filesystem user client"
   echo "  balancer             run a cluster balancing utility"
   echo "  fetchdt              fetch a delegation token from the NameNode"
-  echo "  jobtracker           run the MapReduce job Tracker node" 
+  echo "  jobtracker           run the MapReduce job Tracker node"
   echo "  pipes                run a Pipes job"
-  echo "  tasktracker          run a MapReduce task Tracker node" 
+  echo "  tasktracker          run a MapReduce task Tracker node"
   echo "  historyserver        run job history servers as a standalone daemon"
   echo "  job                  manipulate MapReduce jobs"
-  echo "  queue                get information regarding JobQueues" 
+  echo "  queue                get information regarding JobQueues"
   echo "  version              print the version"
   echo "  jar <jar>            run a jar file"
   echo "  distcp <srcurl> <desturl> copy file or directories recursively"
@@ -120,14 +120,14 @@ if [ "$JAVA_HOME" != "" ]; then
   #echo "run java in $JAVA_HOME"
   JAVA_HOME=$JAVA_HOME
 fi
-  
+
 if [ "$JAVA_HOME" = "" ]; then
   echo "Error: JAVA_HOME is not set."
   exit 1
 fi
 
 JAVA=$JAVA_HOME/bin/java
-JAVA_HEAP_MAX=-Xmx1000m 
+JAVA_HEAP_MAX=-Xmx1000m
 
 # check envvars which might override default args
 if [ "$HADOOP_HEAPSIZE" != "" ]; then
@@ -328,7 +328,7 @@ fi
 JAVA_LIBRARY_PATH=''
 if [ -d "${HADOOP_HOME}/build/native" -o -d "${HADOOP_HOME}/lib/native" -o -e "${HADOOP_PREFIX}/lib/libhadoop.a" ]; then
   JAVA_PLATFORM=`CLASSPATH=${CLASSPATH} ${JAVA} -Xmx32m ${HADOOP_JAVA_PLATFORM_OPTS} org.apache.hadoop.util.PlatformName | sed -e "s/ /_/g"`
-  
+
   if [ "$JAVA_PLATFORM" = "Linux-amd64-64" ]; then
     JSVC_ARCH="amd64"
   else
@@ -338,7 +338,7 @@ if [ -d "${HADOOP_HOME}/build/native" -o -d "${HADOOP_HOME}/lib/native" -o -e "$
   if [ -d "$HADOOP_HOME/build/native" ]; then
     JAVA_LIBRARY_PATH=${HADOOP_HOME}/build/native/${JAVA_PLATFORM}/lib
   fi
-  
+
   if [ -d "${HADOOP_HOME}/lib/native" ]; then
     if [ "x$JAVA_LIBRARY_PATH" != "x" ]; then
       JAVA_LIBRARY_PATH=${JAVA_LIBRARY_PATH}:${HADOOP_HOME}/lib/native/${JAVA_PLATFORM}
@@ -348,7 +348,8 @@ if [ -d "${HADOOP_HOME}/build/native" -o -d "${HADOOP_HOME}/lib/native" -o -e "$
   fi
 
   if [ -e "${HADOOP_PREFIX}/lib/libhadoop.a" ]; then
-    JAVA_LIBRARY_PATH=${HADOOP_PREFIX}/lib
+    # Snappy is not in libhadoop, always keep the previously constructed JAVA native path.
+    JAVA_LIBRARY_PATH=${JAVA_LIBRARY_PATH}:${HADOOP_PREFIX}/lib
   fi
 fi
 
@@ -371,7 +372,7 @@ fi
 
 if [ "x$JAVA_LIBRARY_PATH" != "x" ]; then
   HADOOP_OPTS="$HADOOP_OPTS -Djava.library.path=$JAVA_LIBRARY_PATH"
-fi  
+fi
 HADOOP_OPTS="$HADOOP_OPTS -Dhadoop.policy.file=$HADOOP_POLICYFILE"
 
 # Check to see if we should start a secure datanode
